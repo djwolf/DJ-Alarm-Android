@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">DJ Alarm</string>
+    <string name="ok">OK</string>
+    <string name="set_alarm">Set Alarm</string>
+</resources>
