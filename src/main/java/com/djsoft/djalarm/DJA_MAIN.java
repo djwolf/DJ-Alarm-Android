@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ToggleButton;
-
+import com.djsoft.djalarm.util.Alarm;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.lang.Thread;
@@ -20,6 +20,7 @@ public class DJA_MAIN extends AppCompatActivity {
     private Button setAlarmButton;
     public static ToggleButton alOnOffButton;
     private String[] curTimeText;
+    public static Alarm alarm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +36,7 @@ public class DJA_MAIN extends AppCompatActivity {
             }
         });
         curTimeText = new String[]{"12", "00", "A"};
-        DJA_MAIN_FUNC();
+        DJA_MAIN_FNC();
     }
 
     private void updateClock(final boolean semiOn)
@@ -56,7 +57,7 @@ public class DJA_MAIN extends AppCompatActivity {
     }
 
 
-    public void DJA_MAIN_FUNC() {
+    public void DJA_MAIN_FNC() {
         new Thread()
         {
             public void run()
@@ -77,6 +78,12 @@ public class DJA_MAIN extends AppCompatActivity {
                         if (curHour == 0)
                             curHour = 12;
                     }
+
+                    if (alarm == null)
+                        System.out.println("Null alarm object");
+                    else
+                        System.out.println(alarm.getTime()[0] + ":" + alarm.getTime()[1]);
+
                     curTimeText[0] = "" + curHour;
                     curTimeText[1] = "" + curMinuteSTR;
                     curTimeText[2] = amPM;
