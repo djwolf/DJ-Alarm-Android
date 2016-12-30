@@ -8,6 +8,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service android:name=".DJA_ALARM_SERVICE" />
+
         <activity android:name=".DJA_MAIN">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -15,7 +17,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DJA_SET_ALARM"></activity>
+        <activity android:name=".DJA_SET_ALARM" />
+        <activity android:name=".DJA_STOP_ALARM"></activity>
     </application>
 
 </manifest>

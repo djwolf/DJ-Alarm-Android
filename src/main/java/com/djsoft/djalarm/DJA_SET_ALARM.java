@@ -1,13 +1,16 @@
 package com.djsoft.djalarm;
 
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TimePicker;
 import com.djsoft.djalarm.util.Alarm;
 
-public class DJA_SET_ALARM extends AppCompatActivity {
+import java.io.Serializable;
+
+public class DJA_SET_ALARM extends AppCompatActivity implements Serializable {
     private TimePicker setAlarmWidget;
 
     @Override
@@ -22,8 +25,12 @@ public class DJA_SET_ALARM extends AppCompatActivity {
     {
         boolean am;
         if (setAlarmWidget.getCurrentHour() >= 12) {am = false;} else {am = true;}
-        DJA_MAIN.alarm = new Alarm(0,setAlarmWidget.getCurrentHour(),setAlarmWidget.getCurrentMinute(),am);
+        final Alarm al = new Alarm(0,setAlarmWidget.getCurrentHour(),setAlarmWidget.getCurrentMinute(),am);
+        DJA_MAIN.alarm = al;
         DJA_MAIN.alOnOffButton.setChecked(true);
+        final DJA_SET_ALARM DJ_S_A = this;
+        startService(new Intent(DJ_S_A, DJA_ALARM_SERVICE.class).putExtra("Alarm", al));
+        //startService(new Intent(DJ_S_A, DJA_ALARM_SERVICE.class).putExtra("Alarm", al));
         finish();
     }
 }

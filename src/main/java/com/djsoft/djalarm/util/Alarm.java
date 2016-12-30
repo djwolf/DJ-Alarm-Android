@@ -1,10 +1,12 @@
 package com.djsoft.djalarm.util;
 
+import java.io.Serializable;
+
 /**
  * Created by djwolf on 12/28/2016.
  */
 
-public class Alarm {
+public class Alarm implements Serializable{
     private int day, hour, minute; //days start with sunday at 0
     private boolean complete = false;
 

@@ -79,11 +79,6 @@ public class DJA_MAIN extends AppCompatActivity {
                             curHour = 12;
                     }
 
-                    if (alarm == null)
-                        System.out.println("Null alarm object");
-                    else
-                        System.out.println(alarm.getTime()[0] + ":" + alarm.getTime()[1]);
-
                     curTimeText[0] = "" + curHour;
                     curTimeText[1] = "" + curMinuteSTR;
                     curTimeText[2] = amPM;
