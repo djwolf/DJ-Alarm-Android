@@ -17,7 +17,8 @@
         android:layout_below="@+id/timeText"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="144dp"
-        android:id="@+id/alOnOffButton" />
+        android:id="@+id/alOnOffButton"
+        android:onClick="toggleButton" />
 
     <TextView
         android:layout_width="wrap_content"

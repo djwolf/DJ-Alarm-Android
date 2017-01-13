@@ -12,12 +12,12 @@ public class Alarm implements Serializable{
 
     public Alarm()
     {
-        day = 1;
+        day = 0;
         hour = 12;
         minute = 0;
     }
 
-    public Alarm(int d, int h, int mi, boolean a)
+    public Alarm(int d, int h, int mi)
     {
         day = d;
         hour = h;
@@ -25,7 +25,7 @@ public class Alarm implements Serializable{
     }
 
     public void completeAlarm() {complete = true;}
-    public void setDay(int d) { day = d;}
+    public void setDay(int d) {day = d;}
     public void setTime(int h, int m) {hour = h; minute = m;}
 
     public int getDay() {return day;}

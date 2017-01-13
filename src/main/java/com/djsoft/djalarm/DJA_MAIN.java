@@ -56,6 +56,11 @@ public class DJA_MAIN extends AppCompatActivity {
         });
     }
 
+    public void toggleButton(View view)
+    {
+        stopService(new Intent(DJA_MAIN.this,DJA_ALARM_SERVICE.class));
+    }
+
 
     public void DJA_MAIN_FNC() {
         new Thread()
