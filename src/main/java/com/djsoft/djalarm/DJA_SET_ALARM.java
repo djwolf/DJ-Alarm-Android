@@ -20,11 +20,22 @@ public class DJA_SET_ALARM extends AppCompatActivity implements Serializable {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_alarm);
         setAlarmWidget = (TimePicker) findViewById(R.id.setTime);
-        //Intent intent = getIntent();
+        if (DJA_MAIN.alarm != null)
+        {
+            setAlarmWidget.setCurrentHour(DJA_MAIN.alarm.getTime()[0]);
+            setAlarmWidget.setCurrentMinute(DJA_MAIN.alarm.getTime()[1]);
+        }
     }
 
     public void onClickOK(View v)
     {
+        //if an alarm is going off, kill that service and make a new one
+        if (DJA_ALARM_SERVICE.alarmTime)
+        {
+            DJA_ALARM_SERVICE.alarmLoop.interrupt();
+            while (DJA_ALARM_SERVICE.running) {}
+        }
+
         int curDate = c.get(Calendar.DAY_OF_MONTH);
         int curHour = c.get(Calendar.HOUR_OF_DAY);
         int curMinute = c.get(Calendar.MINUTE);

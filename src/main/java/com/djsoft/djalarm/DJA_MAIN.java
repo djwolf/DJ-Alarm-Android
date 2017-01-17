@@ -26,9 +26,16 @@ public class DJA_MAIN extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dja_main);
+
+        //define UI attributes
         timeText = (TextView) findViewById(R.id.timeText);
         alOnOffButton = (ToggleButton) findViewById(R.id.alOnOffButton);
         setAlarmButton = (Button) findViewById(R.id.setAlarmButton);
+
+        //ensure persistence
+        if (DJA_ALARM_SERVICE.running)
+            alOnOffButton.setChecked(true);
+
         setAlarmButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 System.out.println("Running code");
@@ -58,7 +65,15 @@ public class DJA_MAIN extends AppCompatActivity {
 
     public void toggleButton(View view)
     {
-        stopService(new Intent(DJA_MAIN.this,DJA_ALARM_SERVICE.class));
+        if (alOnOffButton.isChecked())
+            stopService(new Intent(DJA_MAIN.this,DJA_ALARM_SERVICE.class));
+        else
+        {
+            if (alarm != null)
+            {
+                startService(new Intent(DJA_MAIN.this, DJA_ALARM_SERVICE.class).putExtra("Alarm", alarm));
+            }
+        }
     }
 
 

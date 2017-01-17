@@ -29,18 +29,25 @@
         android:textSize="40sp"
         android:text="Incorrect answer!" />
 
+    <Button
+        android:text="OK"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="46dp"
+        android:onClick="okButtonClick" />
+
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="number"
         android:ems="10"
-        android:layout_below="@+id/mathProblem"
-        android:layout_marginTop="98dp"
         android:id="@+id/answerEntry"
-        android:text="4"
+        android:layout_above="@+id/button"
         android:layout_alignLeft="@+id/mathProblem"
         android:layout_alignStart="@+id/mathProblem"
-        android:layout_alignRight="@+id/mathProblem"
-        android:layout_alignEnd="@+id/mathProblem" />
+        android:layout_marginBottom="78dp" />
 
 </RelativeLayout>

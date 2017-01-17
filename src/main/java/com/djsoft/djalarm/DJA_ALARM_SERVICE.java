@@ -17,9 +17,11 @@ import com.djsoft.djalarm.util.Alarm;
 
 public class DJA_ALARM_SERVICE extends Service implements Serializable {
     private final IBinder mBinder = new LocalBinder();
-    public static boolean running = false;
+    public static boolean running;
     private static Alarm al;
     private Thread serviceLoop;
+    public static Thread alarmLoop;
+    public static boolean alarmTime;
 
     public class LocalBinder extends Binder {
         DJA_ALARM_SERVICE getService() {
@@ -33,17 +35,43 @@ public class DJA_ALARM_SERVICE extends Service implements Serializable {
     }
 
     public void soundAlarm()
-    {
+    { //when the alarm is meant to go off, this function will be called
         stopForeground(true);
         Intent notificationIntent = new Intent(this, DJA_STOP_ALARM.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         Notification alNotify = new Notification.Builder(this)
                 .setContentTitle("DJ Alarm")
-                .setContentText("Alert: Your alarm has been set off!")
+                .setContentText("Alert: Your alarm is now going off!")
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent)
                 .getNotification();
         startForeground(3005,alNotify);
+
+        new Thread()
+        {
+            @Override
+            public void run()
+            {
+                alarmTime = true;
+                alarmLoop = this;
+                boolean runLoop = true;
+                while (runLoop)
+                {
+                    try
+                    {
+                        System.out.println("ALARM!");
+                        Thread.sleep(5000);
+                    } catch (Exception e)
+                    {
+                        e.printStackTrace();
+                        System.out.println("Alarm loop interrupted");
+                        runLoop = false;
+                    }
+                }
+                alarmTime = false;
+                stopService(new Intent(DJA_ALARM_SERVICE.this, DJA_ALARM_SERVICE.class));
+            }
+        }.start();
     }
 
     @Override
@@ -59,18 +87,26 @@ public class DJA_ALARM_SERVICE extends Service implements Serializable {
                 .getNotification();
         startForeground(3004, notification);
         new Thread() {
+            @Override
             public void run() {
                 serviceLoop = this;
                 boolean run = true;
+                boolean alarmTime = false;
                 while (run) {
                     System.out.println("Alarm service is running");
                     Calendar ca = Calendar.getInstance();
                     if (al.getTime()[0] == ca.get(Calendar.HOUR_OF_DAY) && al.getTime()[1] == ca.get(Calendar.MINUTE)) {
                         System.out.println("ALARM TIME!!!");
+                        run = false;
+                        alarmTime = true;
                     }
                     try {
+                        if (alarmTime)
+                            interrupt();
                         Thread.sleep(5000);
                     } catch (Exception e) {
+                        if (alarmTime)
+                            soundAlarm();
                         e.printStackTrace();
                         run = false;
                         System.out.println("Service Loop Interrupted and stopped");
@@ -93,6 +129,7 @@ public class DJA_ALARM_SERVICE extends Service implements Serializable {
 
     @Override
     public void onDestroy() {
+        System.out.println("Service Destroyed");
         stopForeground(true);
         serviceLoop.interrupt();
         running = false;
