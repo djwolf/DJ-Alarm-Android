@@ -46,6 +46,7 @@ public class DJA_ALARM_SERVICE extends Service implements Serializable {
                 .setContentIntent(pendingIntent)
                 .getNotification();
         startForeground(3005,alNotify);
+        final DJA_ALARM_SERVICE dja_s = this;
 
         new Thread()
         {
@@ -68,8 +69,9 @@ public class DJA_ALARM_SERVICE extends Service implements Serializable {
                         runLoop = false;
                     }
                 }
+                System.out.println("Running this section");
                 alarmTime = false;
-                stopService(new Intent(DJA_ALARM_SERVICE.this, DJA_ALARM_SERVICE.class));
+                stopService(new Intent(DJA_ALARM_SERVICE.this,DJA_ALARM_SERVICE.class));
             }
         }.start();
     }
@@ -114,8 +116,7 @@ public class DJA_ALARM_SERVICE extends Service implements Serializable {
                 }
             }
         }.start();
-
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 
     public static void setAlarm(Alarm a) {
@@ -132,6 +133,7 @@ public class DJA_ALARM_SERVICE extends Service implements Serializable {
         System.out.println("Service Destroyed");
         stopForeground(true);
         serviceLoop.interrupt();
+        alarmLoop.interrupt();
         running = false;
     }
 }

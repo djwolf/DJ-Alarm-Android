@@ -11,14 +11,12 @@
     tools:context="com.djsoft.djalarm.DJA_MAIN">
 
     <ToggleButton
-        android:text="ToggleButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/timeText"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="144dp"
-        android:id="@+id/alOnOffButton"
-        android:onClick="toggleButton" />
+        android:id="@+id/alOnOffButton" />
 
     <TextView
         android:layout_width="wrap_content"

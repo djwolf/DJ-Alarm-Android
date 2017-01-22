@@ -3,9 +3,12 @@ package com.djsoft.djalarm;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 import com.djsoft.djalarm.util.Alarm;
 import java.text.SimpleDateFormat;
@@ -31,6 +34,26 @@ public class DJA_MAIN extends AppCompatActivity {
         timeText = (TextView) findViewById(R.id.timeText);
         alOnOffButton = (ToggleButton) findViewById(R.id.alOnOffButton);
         setAlarmButton = (Button) findViewById(R.id.setAlarmButton);
+        alOnOffButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                System.out.println("is this thing on");
+                if (isChecked) {
+                    if (!DJA_ALARM_SERVICE.running)
+                    {
+                        if (alarm == null)
+                        {
+                            Toast.makeText(getApplicationContext(),"Set an alarm before turning it on",Toast.LENGTH_SHORT).show();
+                            alOnOffButton.setChecked(false);
+                        } else
+                            startService(new Intent(DJA_MAIN.this, DJA_ALARM_SERVICE.class).putExtra("Alarm", alarm));
+                    }
+                } else {
+                    System.out.println("the else thingy");
+                    if (alarm != null)
+                        stopService(new Intent(DJA_MAIN.this,DJA_ALARM_SERVICE.class));
+                }
+            }
+        });
 
         //ensure persistence
         if (DJA_ALARM_SERVICE.running)
@@ -61,19 +84,6 @@ public class DJA_MAIN extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    public void toggleButton(View view)
-    {
-        if (alOnOffButton.isChecked())
-            stopService(new Intent(DJA_MAIN.this,DJA_ALARM_SERVICE.class));
-        else
-        {
-            if (alarm != null)
-            {
-                startService(new Intent(DJA_MAIN.this, DJA_ALARM_SERVICE.class).putExtra("Alarm", alarm));
-            }
-        }
     }
 
 
