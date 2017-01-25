@@ -26,8 +26,8 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:id="@+id/errorMsg"
-        android:textSize="40sp"
-        android:text="Incorrect answer!" />
+        android:textSize="24sp"
+        android:text="Enter the answer to stop the alarm" />
 
     <Button
         android:text="OK"

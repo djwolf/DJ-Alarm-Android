@@ -3,7 +3,6 @@ package com.djsoft.djalarm;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -21,6 +20,7 @@ public class DJA_MAIN extends AppCompatActivity {
     private SimpleDateFormat getMinute = new SimpleDateFormat("mm");
     private TextView timeText;
     private Button setAlarmButton;
+    private Button settingsButton;
     public static ToggleButton alOnOffButton;
     private String[] curTimeText;
     public static Alarm alarm;
@@ -34,6 +34,7 @@ public class DJA_MAIN extends AppCompatActivity {
         timeText = (TextView) findViewById(R.id.timeText);
         alOnOffButton = (ToggleButton) findViewById(R.id.alOnOffButton);
         setAlarmButton = (Button) findViewById(R.id.setAlarmButton);
+        settingsButton = (Button) findViewById(R.id.settingsButton);
         alOnOffButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 System.out.println("is this thing on");
@@ -61,10 +62,15 @@ public class DJA_MAIN extends AppCompatActivity {
 
         setAlarmButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                System.out.println("Running code");
                 startActivity(new Intent(v.getContext(), DJA_SET_ALARM.class));
             }
         });
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startActivity(new Intent(v.getContext(), DJA_SETTINGS.class));
+            }
+        });
+
         curTimeText = new String[]{"12", "00", "A"};
         DJA_MAIN_FNC();
     }

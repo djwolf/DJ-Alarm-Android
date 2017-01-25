@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.lang.Math;
 
 public class DJA_STOP_ALARM extends AppCompatActivity {
@@ -26,7 +28,7 @@ public class DJA_STOP_ALARM extends AppCompatActivity {
         entry = (EditText) findViewById(R.id.answerEntry);
 
         //setup the UI
-        errMsg.setText("Enter answer to stop alarm");
+        errMsg.setText("Enter the answer to stop the alarm");
         errMsg.setTextSize(30);
         setProblem();
     }
@@ -43,13 +45,12 @@ public class DJA_STOP_ALARM extends AppCompatActivity {
         if (Integer.parseInt(String.valueOf(entry.getText())) == (firstVal + secondVal))
         {
             System.out.println("Correct!");
-            DJA_ALARM_SERVICE.alarmLoop.interrupt();
 
             //bring up the main activity
             startActivity(new Intent(this, DJA_MAIN.class));
+            DJA_MAIN.alOnOffButton.setChecked(false);
             finish();
-        } else {
-            errMsg.setText("Incorrect answer!");
-        }
+        } else
+            Toast.makeText(getApplicationContext(),"Incorrect Answer!",Toast.LENGTH_SHORT).show();
     }
 }

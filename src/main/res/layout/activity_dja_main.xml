@@ -10,43 +10,45 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.djsoft.djalarm.DJA_MAIN">
 
-    <ToggleButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/timeText"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="144dp"
-        android:id="@+id/alOnOffButton" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="12:00 AM"
-        android:textSize="70sp"
+        android:textSize="65sp"
         android:id="@+id/timeText"
-        android:layout_marginTop="51dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
-    <Button
-        android:text="@string/set_alarm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/setAlarmButton"
-        android:layout_toLeftOf="@+id/alOnOffButton"
-        android:layout_toStartOf="@+id/alOnOffButton" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:gravity="center_horizontal"/>
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/alOnOffButton"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:text="Settings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/setAlarmButton"
         android:id="@+id/settingsButton"
-        android:layout_toRightOf="@+id/alOnOffButton"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_toRightOf="@+id/alOnOffButton"
+        android:layout_toEndOf="@+id/alOnOffButton" />
+
+    <Button
+        android:text="@string/set_alarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/setAlarmButton"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/alOnOffButton"
+        android:layout_toStartOf="@+id/alOnOffButton" />
 
 </RelativeLayout>

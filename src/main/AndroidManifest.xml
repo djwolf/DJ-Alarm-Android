@@ -18,7 +18,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".DJA_SET_ALARM" />
-        <activity android:name=".DJA_STOP_ALARM"></activity>
+        <activity android:name=".DJA_STOP_ALARM" />
+        <activity android:name=".DJA_SETTINGS"></activity>
     </application>
 
 </manifest>

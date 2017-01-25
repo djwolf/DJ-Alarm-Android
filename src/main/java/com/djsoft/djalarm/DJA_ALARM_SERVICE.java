@@ -4,11 +4,16 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.os.Binder;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import java.io.Serializable;
+import android.net.Uri;
+import android.provider.Settings;
 import java.util.Calendar;
-
 import com.djsoft.djalarm.util.Alarm;
 
 /**
@@ -22,6 +27,10 @@ public class DJA_ALARM_SERVICE extends Service implements Serializable {
     private Thread serviceLoop;
     public static Thread alarmLoop;
     public static boolean alarmTime;
+    private SharedPreferences settings;
+    private Uri alarmToneURI;
+    private Ringtone alarmTone;
+    public static boolean playAlarm;
 
     public class LocalBinder extends Binder {
         DJA_ALARM_SERVICE getService() {
@@ -32,11 +41,20 @@ public class DJA_ALARM_SERVICE extends Service implements Serializable {
     @Override
     public void onCreate() {
         running = true;
+        settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        try
+        {
+            alarmToneURI = Uri.parse(settings.getString("alarm_preference",null));
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        alarmTone = RingtoneManager.getRingtone(getApplicationContext(),alarmToneURI);
+        System.out.println(alarmTone);
     }
 
     public void soundAlarm()
     { //when the alarm is meant to go off, this function will be called
-        stopForeground(true);
         Intent notificationIntent = new Intent(this, DJA_STOP_ALARM.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         Notification alNotify = new Notification.Builder(this)
@@ -45,7 +63,7 @@ public class DJA_ALARM_SERVICE extends Service implements Serializable {
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent)
                 .getNotification();
-        startForeground(3005,alNotify);
+        startForeground(3004,alNotify);
         final DJA_ALARM_SERVICE dja_s = this;
 
         new Thread()
@@ -58,15 +76,34 @@ public class DJA_ALARM_SERVICE extends Service implements Serializable {
                 boolean runLoop = true;
                 while (runLoop)
                 {
+
                     try
                     {
-                        System.out.println("ALARM!");
-                        Thread.sleep(5000);
-                    } catch (Exception e)
+                        if (!alarmTone.isPlaying()) {
+                            alarmTone.play();
+                        }
+                    } catch (NullPointerException e)
                     {
+                        System.out.println("Application crash due to ringtone data error prevented - reverting to default ringtone");
                         e.printStackTrace();
+                        alarmTone = RingtoneManager.getRingtone(getApplicationContext(), Settings.System.DEFAULT_RINGTONE_URI);
+                    }
+                    try
+                    {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e)
+                    {
                         System.out.println("Alarm loop interrupted");
+                        e.printStackTrace();
+                        playAlarm = false;
                         runLoop = false;
+                        try
+                        {
+                            alarmTone.stop();
+                        } catch (Exception ex)
+                        {
+                            ex.printStackTrace();
+                        }
                     }
                 }
                 System.out.println("Running this section");
@@ -83,7 +120,7 @@ public class DJA_ALARM_SERVICE extends Service implements Serializable {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         Notification notification = new Notification.Builder(this)
                 .setContentTitle("DJ Alarm")
-                .setContentText("DJ Alarm is running and is waiting to sound the alarm.")
+                .setContentText("Waiting for alarm time")
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent)
                 .getNotification();
@@ -116,7 +153,7 @@ public class DJA_ALARM_SERVICE extends Service implements Serializable {
                 }
             }
         }.start();
-        return START_NOT_STICKY;
+        return START_STICKY;
     }
 
     public static void setAlarm(Alarm a) {
@@ -132,8 +169,10 @@ public class DJA_ALARM_SERVICE extends Service implements Serializable {
     public void onDestroy() {
         System.out.println("Service Destroyed");
         stopForeground(true);
-        serviceLoop.interrupt();
-        alarmLoop.interrupt();
+        if (serviceLoop != null)
+            serviceLoop.interrupt();
+        if (alarmLoop != null)
+            alarmLoop.interrupt();
         running = false;
     }
 }
