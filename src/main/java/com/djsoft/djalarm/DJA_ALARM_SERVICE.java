@@ -31,6 +31,7 @@ public class DJA_ALARM_SERVICE extends Service implements Serializable {
     private Uri alarmToneURI;
     private Ringtone alarmTone;
     public static boolean playAlarm;
+    private boolean serviceRecover;
 
     public class LocalBinder extends Binder {
         DJA_ALARM_SERVICE getService() {
@@ -51,6 +52,8 @@ public class DJA_ALARM_SERVICE extends Service implements Serializable {
         }
         alarmTone = RingtoneManager.getRingtone(getApplicationContext(),alarmToneURI);
         System.out.println(alarmTone);
+        if (settings.contains("ALARM_YEAR"))
+            serviceRecover = true;
     }
 
     public void soundAlarm()
@@ -76,7 +79,6 @@ public class DJA_ALARM_SERVICE extends Service implements Serializable {
                 boolean runLoop = true;
                 while (runLoop)
                 {
-
                     try
                     {
                         if (!alarmTone.isPlaying()) {
@@ -86,7 +88,7 @@ public class DJA_ALARM_SERVICE extends Service implements Serializable {
                     {
                         System.out.println("Application crash due to ringtone data error prevented - reverting to default ringtone");
                         e.printStackTrace();
-                        alarmTone = RingtoneManager.getRingtone(getApplicationContext(), Settings.System.DEFAULT_RINGTONE_URI);
+                        alarmTone = RingtoneManager.getRingtone(getApplicationContext(), Settings.System.DEFAULT_ALARM_ALERT_URI);
                     }
                     try
                     {
@@ -115,7 +117,10 @@ public class DJA_ALARM_SERVICE extends Service implements Serializable {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        al = (Alarm) intent.getSerializableExtra("Alarm");
+        if (serviceRecover)
+            al = new Alarm(settings.getInt("ALARM_HOUR",0),settings.getInt("ALARM_MINUTE",0),settings.getInt("ALARM_DAY",0),settings.getInt("ALARM_MONTH",0),settings.getInt("ALARM_YEAR",0),getApplicationContext());
+        else
+            al = (Alarm) intent.getSerializableExtra("Alarm");
         Intent notificationIntent = new Intent(this, DJA_MAIN.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         Notification notification = new Notification.Builder(this)
@@ -134,7 +139,8 @@ public class DJA_ALARM_SERVICE extends Service implements Serializable {
                 while (run) {
                     System.out.println("Alarm service is running");
                     Calendar ca = Calendar.getInstance();
-                    if (al.getTime()[0] == ca.get(Calendar.HOUR_OF_DAY) && al.getTime()[1] == ca.get(Calendar.MINUTE)) {
+                    System.out.println(ca.compareTo(Alarm.alCal));
+                    if (ca.compareTo(Alarm.alCal) >= 0) {
                         System.out.println("ALARM TIME!!!");
                         run = false;
                         alarmTime = true;

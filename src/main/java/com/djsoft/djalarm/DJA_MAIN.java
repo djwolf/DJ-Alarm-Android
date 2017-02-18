@@ -1,6 +1,10 @@
 package com.djsoft.djalarm;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +17,7 @@ import com.djsoft.djalarm.util.Alarm;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.lang.Thread;
+import java.lang.Math;
 
 public class DJA_MAIN extends AppCompatActivity {
     private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
@@ -24,17 +29,46 @@ public class DJA_MAIN extends AppCompatActivity {
     public static ToggleButton alOnOffButton;
     private String[] curTimeText;
     public static Alarm alarm;
+    private SharedPreferences settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dja_main);
 
+        if (Math.random() >= 0.5)
+        {
+            AlertDialog.Builder warningBuilder = new AlertDialog.Builder(DJA_MAIN.this);
+            warningBuilder.setMessage("This application is in the process of being developed. This is in no way the final version. The owner, djwolf, takes no responsibility for anything that happens in this stage of development. It is highly encouraged that you use a backup alarm that is stable along with testing this one.")
+                    .setTitle("Testing Agreement");
+
+            warningBuilder.setPositiveButton("I agree", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User clicked OK button
+                }
+            });
+            AlertDialog alertDialog = warningBuilder.create();
+            alertDialog.show();
+        }
+
+        //grab the settings and ensure persistence
+        settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        System.out.println(settings.getInt("ALARM_HOUR",0));
+        final SharedPreferences.Editor settingsEditor = settings.edit();
+        if (!settings.contains("alOnOff"))
+        {
+            settingsEditor.putBoolean("alOnOff",false);
+            settingsEditor.apply();
+        }
+
         //define UI attributes
         timeText = (TextView) findViewById(R.id.timeText);
         alOnOffButton = (ToggleButton) findViewById(R.id.alOnOffButton);
         setAlarmButton = (Button) findViewById(R.id.setAlarmButton);
         settingsButton = (Button) findViewById(R.id.settingsButton);
+
+
+        //set event handlers for UI elements
         alOnOffButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 System.out.println("is this thing on");
@@ -46,20 +80,28 @@ public class DJA_MAIN extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(),"Set an alarm before turning it on",Toast.LENGTH_SHORT).show();
                             alOnOffButton.setChecked(false);
                         } else
+                        {
                             startService(new Intent(DJA_MAIN.this, DJA_ALARM_SERVICE.class).putExtra("Alarm", alarm));
+                            settingsEditor.putBoolean("alOnOff",true);
+                            settingsEditor.apply();
+                        }
                     }
                 } else {
                     System.out.println("the else thingy");
                     if (alarm != null)
+                    {
                         stopService(new Intent(DJA_MAIN.this,DJA_ALARM_SERVICE.class));
+                        settingsEditor.putBoolean("alOnOff",false);
+                        settingsEditor.remove("ALARM_HOUR");
+                        settingsEditor.remove("ALARM_MINUTE");
+                        settingsEditor.remove("ALARM_DAY");
+                        settingsEditor.remove("ALARM_MONTH");
+                        settingsEditor.remove("ALARM_YEAR");
+                        settingsEditor.apply();
+                    }
                 }
             }
         });
-
-        //ensure persistence
-        if (DJA_ALARM_SERVICE.running)
-            alOnOffButton.setChecked(true);
-
         setAlarmButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 startActivity(new Intent(v.getContext(), DJA_SET_ALARM.class));
@@ -70,6 +112,17 @@ public class DJA_MAIN extends AppCompatActivity {
                 startActivity(new Intent(v.getContext(), DJA_SETTINGS.class));
             }
         });
+
+        //ensure persistence
+        if (DJA_ALARM_SERVICE.running)
+            alOnOffButton.setChecked(true);
+        else {
+            if (settings.contains("ALARM_YEAR"))
+            {
+                alarm = new Alarm(settings.getInt("ALARM_HOUR",0),settings.getInt("ALARM_MINUTE",0),settings.getInt("ALARM_DAY",0),settings.getInt("ALARM_MONTH",0),settings.getInt("ALARM_YEAR",0),getApplicationContext());
+                alOnOffButton.setChecked(true);
+            }
+        }
 
         curTimeText = new String[]{"12", "00", "A"};
         DJA_MAIN_FNC();

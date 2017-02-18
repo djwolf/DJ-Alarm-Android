@@ -73,7 +73,7 @@ public class DJA_SET_ALARM extends AppCompatActivity implements Serializable {
                 }
 
 
-                final Alarm al = new Alarm(0,setAlarmWidget.getCurrentHour(),setAlarmWidget.getCurrentMinute());
+                final Alarm al = new Alarm(setAlarmWidget.getCurrentHour(),setAlarmWidget.getCurrentMinute(), getApplicationContext());
                 DJA_MAIN.alarm = al;
 
                 //wait for the service to be running before disabling the toggle button

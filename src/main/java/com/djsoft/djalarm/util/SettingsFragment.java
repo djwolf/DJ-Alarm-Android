@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.preference.RingtonePreference;
 import android.widget.Toast;
 import com.djsoft.djalarm.R;
 
@@ -18,6 +19,8 @@ public class SettingsFragment extends PreferenceFragment {
 
         Preference listDifficulty = findPreference("list_problem_difficulty");
         Preference listRingtone = findPreference("alarm_preference");
+        RingtonePreference rtP = (RingtonePreference) findPreference("alarm_preference");
+        rtP.setRingtoneType(4);
 
         listDifficulty.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
