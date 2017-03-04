@@ -139,8 +139,13 @@ public class DJA_ALARM_SERVICE extends Service implements Serializable {
                 while (run) {
                     System.out.println("Alarm service is running");
                     Calendar ca = Calendar.getInstance();
-                    System.out.println(ca.compareTo(Alarm.alCal));
-                    if (ca.compareTo(Alarm.alCal) >= 0) {
+                    System.out.println("CURRENT: " + ca.toString());
+                    System.out.println("ALTIME: " + al.alCal.toString());
+                    if (ca.get(Calendar.MONTH) >= al.alCal.get(Calendar.MONTH)
+                            && ca.get(Calendar.DAY_OF_MONTH) >= al.alCal.get(Calendar.DAY_OF_MONTH)
+                            && ca.get(Calendar.YEAR) >= al.alCal.get(Calendar.YEAR)
+                            && ca.get(Calendar.HOUR_OF_DAY) >= al.alCal.get(Calendar.HOUR_OF_DAY)
+                            && ca.get(Calendar.MINUTE) >= al.alCal.get(Calendar.MINUTE)) {
                         System.out.println("ALARM TIME!!!");
                         run = false;
                         alarmTime = true;
