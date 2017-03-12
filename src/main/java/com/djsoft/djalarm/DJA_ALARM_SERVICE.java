@@ -47,26 +47,32 @@ public class DJA_ALARM_SERVICE extends Service implements Serializable {
 
     @Override
     public void onCreate() {
+        boolean defaultSound = false;
         running = true;
         settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         try
         {
             alarmToneURI = Uri.parse(settings.getString("alarm_preference",null));
-        } catch (Exception e)
+        } catch (NullPointerException e)
         {
             e.printStackTrace();
+            defaultSound = true;
+            alarmTone = RingtoneManager.getRingtone(getApplicationContext(), Settings.System.DEFAULT_ALARM_ALERT_URI);
         }
         System.out.println(alarmTone);
         if (settings.contains("ALARM_YEAR"))
             serviceRecover = true;
-        if (!(isValidUri(alarmToneURI.toString())))
-        { //if invalid
-            System.out.println("INVALID URI");
-            alarmToneURI = Uri.parse(getRingtonePathFromContentUri(getApplicationContext(),alarmToneURI));
-            alarmTone = RingtoneManager.getRingtone(getApplicationContext(),alarmToneURI);
-        } else {
-            System.out.println("VALID URI");
-            alarmTone = RingtoneManager.getRingtone(getApplicationContext(),alarmToneURI);
+        if (!defaultSound)
+        {
+            if (!(isValidUri(alarmToneURI.toString())))
+            { //if invalid
+                System.out.println("INVALID URI");
+                alarmToneURI = Uri.parse(getRingtonePathFromContentUri(getApplicationContext(),alarmToneURI));
+                alarmTone = RingtoneManager.getRingtone(getApplicationContext(),alarmToneURI);
+            } else {
+                System.out.println("VALID URI");
+                alarmTone = RingtoneManager.getRingtone(getApplicationContext(),alarmToneURI);
+            }
         }
         alarmTone.setStreamType(AudioManager.STREAM_ALARM);
     }
@@ -132,7 +138,6 @@ public class DJA_ALARM_SERVICE extends Service implements Serializable {
                     {
                         System.out.println("Application crash due to ringtone data error prevented - reverting to default ringtone");
                         e.printStackTrace();
-                        alarmTone = RingtoneManager.getRingtone(getApplicationContext(), Settings.System.DEFAULT_ALARM_ALERT_URI);
                     }
                     try
                     {
