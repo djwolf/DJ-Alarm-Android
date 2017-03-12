@@ -3,15 +3,21 @@ package com.djsoft.djalarm;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.os.Binder;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import java.io.IOException;
 import java.io.Serializable;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import java.util.Calendar;
 import com.djsoft.djalarm.util.Alarm;
@@ -50,10 +56,48 @@ public class DJA_ALARM_SERVICE extends Service implements Serializable {
         {
             e.printStackTrace();
         }
-        alarmTone = RingtoneManager.getRingtone(getApplicationContext(),alarmToneURI);
         System.out.println(alarmTone);
         if (settings.contains("ALARM_YEAR"))
             serviceRecover = true;
+        if (!(isValidUri(alarmToneURI.toString())))
+        { //if invalid
+            System.out.println("INVALID URI");
+            alarmToneURI = Uri.parse(getRingtonePathFromContentUri(getApplicationContext(),alarmToneURI));
+            alarmTone = RingtoneManager.getRingtone(getApplicationContext(),alarmToneURI);
+        } else {
+            System.out.println("VALID URI");
+            alarmTone = RingtoneManager.getRingtone(getApplicationContext(),alarmToneURI);
+        }
+        alarmTone.setStreamType(AudioManager.STREAM_ALARM);
+    }
+
+    public boolean isValidUri(String contentUri){
+
+        boolean result=true;
+
+        MediaPlayer player = new MediaPlayer();
+        try {
+            player.setDataSource(contentUri);
+        } catch (IOException e) {
+            e.printStackTrace();
+            result = false;
+        }
+
+        return result;
+    }
+
+    public String getRingtonePathFromContentUri(Context context,
+                                                 Uri contentUri) {
+        String[] proj = { MediaStore.Audio.Media.DATA };
+        Cursor ringtoneCursor = context.getContentResolver().query(contentUri,
+                proj, null, null, null);
+        ringtoneCursor.moveToFirst();
+
+        String path = ringtoneCursor.getString(ringtoneCursor
+                .getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
+
+        ringtoneCursor.close();
+        return path;
     }
 
     public void soundAlarm()

@@ -1,10 +1,8 @@
 package com.djsoft.djalarm;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -17,7 +15,6 @@ import com.djsoft.djalarm.util.Alarm;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.lang.Thread;
-import java.lang.Math;
 
 public class DJA_MAIN extends AppCompatActivity {
     private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
@@ -36,6 +33,7 @@ public class DJA_MAIN extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dja_main);
 
+        /*
         if (Math.random() >= 0.5)
         {
             AlertDialog.Builder warningBuilder = new AlertDialog.Builder(DJA_MAIN.this);
@@ -50,6 +48,7 @@ public class DJA_MAIN extends AppCompatActivity {
             AlertDialog alertDialog = warningBuilder.create();
             alertDialog.show();
         }
+        */
 
         //grab the settings and ensure persistence
         settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
