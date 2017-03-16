@@ -1,6 +1,8 @@
 package com.djsoft.djalarm;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,17 +14,24 @@ import java.util.Calendar;
 public class DJA_SET_ALARM extends AppCompatActivity implements Serializable {
     private TimePicker setAlarmWidget;
     private Calendar c = Calendar.getInstance();
-
+    private SharedPreferences settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_alarm);
+
+        settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
         setAlarmWidget = (TimePicker) findViewById(R.id.setTime);
         if (DJA_MAIN.alarm != null)
         {
             setAlarmWidget.setCurrentHour(DJA_MAIN.alarm.getTime()[0]);
             setAlarmWidget.setCurrentMinute(DJA_MAIN.alarm.getTime()[1]);
+        } else
+        {
+            setAlarmWidget.setCurrentHour(settings.getInt("SETAL_HOUR",c.get(Calendar.HOUR_OF_DAY)));
+            setAlarmWidget.setCurrentMinute(settings.getInt("SETAL_MINUTE",c.get(Calendar.MINUTE)));
         }
     }
 
@@ -71,6 +80,11 @@ public class DJA_SET_ALARM extends AppCompatActivity implements Serializable {
                     System.out.println("alarm set for tomorrow");
                 }
 
+                //store this in shared preferences for future use
+                final SharedPreferences.Editor settingsEditor = settings.edit();
+                settingsEditor.putInt("SETAL_HOUR",setAlarmWidget.getCurrentHour());
+                settingsEditor.putInt("SETAL_MINUTE",setAlarmWidget.getCurrentMinute());
+                settingsEditor.apply();
 
                 final Alarm al = new Alarm(setAlarmWidget.getCurrentHour(),setAlarmWidget.getCurrentMinute(), getApplicationContext());
                 DJA_MAIN.alarm = al;

@@ -27,11 +27,22 @@ public class DJA_MAIN extends AppCompatActivity {
     private String[] curTimeText;
     public static Alarm alarm;
     private SharedPreferences settings;
+    public static boolean running;
+    public static DJA_MAIN rootObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dja_main);
+
+        if (running)
+        {
+            finish();
+            return;
+        }
+        running = true;
+        rootObject = this;
 
         //grab the settings and ensure persistence
         settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -169,4 +180,13 @@ public class DJA_MAIN extends AppCompatActivity {
             }
         }.start();
     }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        if (rootObject == this)
+            running = false;
+    }
+
 }
