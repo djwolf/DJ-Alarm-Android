@@ -33,23 +33,6 @@ public class DJA_MAIN extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dja_main);
 
-        /*
-        if (Math.random() >= 0.5)
-        {
-            AlertDialog.Builder warningBuilder = new AlertDialog.Builder(DJA_MAIN.this);
-            warningBuilder.setMessage("This application is in the process of being developed. This is in no way the final version. The owner, djwolf, takes no responsibility for anything that happens in this stage of development. It is highly encouraged that you use a backup alarm that is stable along with testing this one.")
-                    .setTitle("Testing Agreement");
-
-            warningBuilder.setPositiveButton("I agree", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    // User clicked OK button
-                }
-            });
-            AlertDialog alertDialog = warningBuilder.create();
-            alertDialog.show();
-        }
-        */
-
         //grab the settings and ensure persistence
         settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         System.out.println(settings.getInt("ALARM_HOUR",0));

@@ -108,6 +108,7 @@ public class DJA_ALARM_SERVICE extends Service implements Serializable {
 
     public void soundAlarm()
     { //when the alarm is meant to go off, this function will be called
+        DJA_STOP_ALARM.problemSolved = true;
         Intent notificationIntent = new Intent(this, DJA_STOP_ALARM.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         Notification alNotify = new Notification.Builder(this)

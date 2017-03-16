@@ -3,11 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <RingtonePreference
-        android:defaultValue=""
         android:title="Alarm Sound"
         android:key="alarm_preference" />
     <ListPreference
-        android:defaultValue="0"
+        android:defaultValue="420"
         android:title="Problem Difficulty"
         android:entries="@array/problem_difficulties_values"
         android:entryValues="@array/problem_difficulties_keys"
