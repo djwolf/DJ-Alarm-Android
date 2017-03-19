@@ -11,33 +11,31 @@
     tools:context="com.djsoft.djalarm.DJA_STOP_ALARM">
 
     <TextView
-        android:text="2 + 2"
-        android:textSize="70sp"
+        android:id="@+id/mathProblem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/mathProblem"
-        android:layout_marginTop="100dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/errorMsg"
+        android:layout_centerHorizontal="true"
+        android:text="2 + 2"
+        android:textSize="50sp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
         android:id="@+id/errorMsg"
         android:textSize="24sp"
-        android:text="Enter the answer to stop the alarm" />
+        android:text="Enter the answer to stop the alarm"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:text="OK"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/button"
+        android:onClick="okButtonClick"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="46dp"
-        android:onClick="okButtonClick" />
+        android:layout_centerHorizontal="true" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -45,9 +43,7 @@
         android:inputType="number"
         android:ems="10"
         android:id="@+id/answerEntry"
-        android:layout_above="@+id/button"
-        android:layout_alignLeft="@+id/mathProblem"
-        android:layout_alignStart="@+id/mathProblem"
-        android:layout_marginBottom="78dp" />
+        android:layout_below="@+id/mathProblem"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
