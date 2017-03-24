@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RingtonePreference
+        android:title="Alarm Sound"
+        android:key="alarm_preference" />
+    <ListPreference
+        android:defaultValue="0"
+        android:title="Problem Difficulty"
+        android:entries="@array/problem_difficulties_values"
+        android:entryValues="@array/problem_difficulties_keys"
+        android:key="list_problem_difficulty" />
+</PreferenceScreen>
